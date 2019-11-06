@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "ood_audio"
+version = "0.1.0"
+description = ""
+authors = ["Turab Iqbal <t.iqbal@surrey.ac.uk>"]
+license = "ISC"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+h5py = "^2.10"
+librosa = "^0.7.1"
+numpy = "^1.17"
+pandas = "^0.25.3"
+scikit-learn = "^0.21.3"
+scipy = "^1.3"
+torch = "=1.3.0"
+torchvision = "=0.4.1"
+tqdm = "^4.37"
+tensorboard = "^2.0"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.7"
+flake8-docstrings = "^1.5"
+sphinx = "^2.2"
+sphinx-rtd-theme = "^0.4.3"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
