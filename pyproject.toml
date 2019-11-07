@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ood_audio"
 version = "0.1.0"
-description = ""
+description = "An audio classification system for learning with out-of-distribution data"
 authors = ["Turab Iqbal <t.iqbal@surrey.ac.uk>"]
 license = "ISC"
 
@@ -13,10 +13,10 @@ numpy = "^1.17"
 pandas = "^0.25.3"
 scikit-learn = "^0.21.3"
 scipy = "^1.3"
+tensorboard = "^2.0"
 torch = "=1.3.0"
 torchvision = "=0.4.1"
 tqdm = "^4.37"
-tensorboard = "^2.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7"
