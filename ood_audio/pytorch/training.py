@@ -57,13 +57,9 @@ def train(x_train, y_train, x_val, y_val, index_val,
         gamma=params['lr_decay'],
     )
 
-    # Determine whether to use data augmentation
-    transform = None
-    if params['augmentation']:
-        transform = SpecAugment(x_train.shape[1], x_train.shape[2])
     # Use helper classes to iterate over data in batches
     batch_size = params['batch_size']
-    loader_train = ImageLoader(x_train, y_train, device, transform=transform,
+    loader_train = ImageLoader(x_train, y_train, device, transform=None,
                                batch_size=batch_size, shuffle=True)
     loader_val = ImageLoader(x_val, y_val, device, batch_size=batch_size)
 
@@ -73,6 +69,10 @@ def train(x_train, y_train, x_val, y_val, index_val,
     logger = Logger(log_path, model_path)
 
     for epoch in range(params['n_epochs']):
+        # Enable data augmentation after 10 epochs
+        if epoch == 10 and params['augmentation']:
+            loader_train.dataset.transform = SpecAugment()
+
         # Train model using training set
         pbar = tqdm(loader_train)
         pbar.set_description(f'Epoch {epoch}')
