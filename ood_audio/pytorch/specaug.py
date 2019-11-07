@@ -25,7 +25,7 @@ class SpecAugment:
                Interspeech, 2019.
     """
 
-    def __init__(self, T=32, F=8, mT=2, mF=2):
+    def __init__(self, T=8, F=8, mT=8, mF=2):
         self.T = T
         self.F = F
         self.mT = mT
