@@ -215,7 +215,7 @@ def evaluate_all(dataset, args, verbose=True):
         scores.append(evaluate(dataset, args, verbose=False))
 
     for metric in ['AP', 'Recall']:
-        for average in ['Micro Average', 'Micro Average']:
+        for average in ['Macro Average', 'Micro Average']:
             mean, sem = _mean([s[metric][average] for s in scores])
             print(f'{metric} {average}: {mean:.3} \u00b1 {sem:.3}')
 
