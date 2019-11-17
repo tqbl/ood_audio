@@ -29,9 +29,9 @@ def main(args):
         predict(datasets.get(args.dataset), args)
     elif args.command == 'evaluate':
         if isinstance(args.training_id, list):
-            evaluate_all(datasets.get(args.dataset), args)
+            evaluate_all(datasets.get('test'), args)
         else:
-            evaluate(datasets.get(args.dataset), args)
+            evaluate(datasets.get('test'), args)
 
 
 def extract(dataset, args):

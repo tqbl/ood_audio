@@ -67,8 +67,7 @@ def parse_args():
     parser_predict.set_defaults(**args_prediction,
                                 training_id=training_id,
                                 block_size=block_size)
-    parser_evaluate.set_defaults(training_id=training_id,
-                                 block_size=block_size)
+    parser_evaluate.set_defaults(training_id=training_id)
 
     # Specify the general command-line arguments
     parser.add_argument('--work_path', metavar='PATH')
@@ -112,9 +111,7 @@ def parse_args():
     parser_predict.add_argument('--odin', type=_bool, metavar='BOOL')
 
     # Specify the command-line arguments of the 'evaluate' sub-command
-    parser_evaluate.add_argument('dataset', choices=['test'])
     parser_evaluate.add_argument('--training_id', metavar='ID', nargs='+')
-    parser_evaluate.add_argument('--block_size', type=int, metavar='N')
 
     return parser.parse_args(remaining_args)
 
