@@ -83,7 +83,8 @@ The ``--model`` option accepts the following values:
 The ``--training_id`` option is used to differentiate training runs, and
 partially determines where the models are saved. When running multiple
 trials, use the ``--seed`` option to specify different random seeds.
-Otherwise. the outputs of the trials will be identical.
+Otherwise, the learned models will be identical across the different
+trials.
 
 Use the ``--relabel`` option to enable the pseudo-labeling algorithm.
 The path to the CSV file containing the pseudo-labels (generated using
