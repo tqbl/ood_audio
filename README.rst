@@ -66,9 +66,7 @@ To extract feature vectors, run::
 
     python ood_audio/main.py extract <training/test> [--recompute] [--sample_rate RATE] [--n_fft N] [--hop_length N] [--n_mels N]
 
-This extracts log-mel feature vectors and stores them in a HDF5 file
-(e.g. *training.h5*) under the directory specified by the
-``--extraction_path`` general option.
+This extracts log-mel feature vectors and stores them in a HDF5 file.
 
 Training
 ^^^^^^^^
@@ -82,16 +80,20 @@ The ``--model`` option accepts the following values:
 * ``vgg`` - Use the randomly-initialized VGG9 model.
 * ``densenet`` - Use the pre-trained DenseNet model.
 
-The directory in which models are saved is a concatenation of the
-``--model_path`` general option and the ``--training_id`` option. The
-latter is a relative path for differentiating training runs. When
-running multiple trials, use the ``--seed`` option to specify different
-random seeds. Otherwise. the outputs of the trials will be identical.
+The ``--training_id`` option is used to differentiate training runs, and
+partially determines where the models are saved. When running multiple
+trials, use the ``--seed`` option to specify different random seeds.
+Otherwise. the outputs of the trials will be identical.
 
 Use the ``--relabel`` option to enable the pseudo-labeling algorithm.
-``--augmentation`` enables data augmentation. The ``--mask`` option
-allows training with a subset of the training set. For example, to train
-with the manually-verified subset of the FSDnoisy18k dataset, run::
+The path to the CSV file containing the pseudo-labels (generated using
+the *predict* sub-command described below) is specified using the
+``--pseudolabel_path`` option.
+
+Other notable options are ``--augmentation``, which enables data
+augmentation, and the ``--mask`` option, which allows training with a
+subset of the training set. For example, to train with the
+manually-verified subset of the training set only, run::
 
     python ood_audio/main.py train --mask manually_verified=1 [options...]
 

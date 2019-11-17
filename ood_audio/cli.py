@@ -101,6 +101,7 @@ def parse_args():
     parser_train.add_argument('--relabel', type=_bool, metavar='BOOL')
     parser_train.add_argument('--relabel_threshold', type=float, metavar='NUM')
     parser_train.add_argument('--relabel_weight', type=float, metavar='NUM')
+    parser_train.add_argument('--pseudolabel_path', metavar='PATH')
     parser_train.add_argument('--augmentation', type=_bool, metavar='BOOL')
 
     # Specify the command-line arguments of the 'predict' sub-command
