@@ -10,8 +10,8 @@ are OOD (hence incorrectly labelled) due to annotation errors.
 The system uses a pseudo-labeling method to relabel the instances that
 are believed to be OOD yet also similar enough to the target classes
 that pseudo-labeling is reasonable. This is achieved by first training
-an auxilliary classifier on a subset of the dataset that has been
-manually verified (i.e. known be in-distribution). The auxilliary
+an auxiliary classifier on a subset of the dataset that has been
+manually verified (i.e. known be in-distribution). The auxiliary
 classifier is then used to detect and relabel the appropriate instances.
 
 
@@ -26,8 +26,8 @@ or::
 
     pip install -r requirements.txt
 
-Currenty, this software works with the FSDnoisy18k dataset, which may be
-downloaded `here`__. Under the root directory of the dataset, the
+Currently, this software works with the FSDnoisy18k dataset, which may
+be downloaded `here`__. Under the root directory of the dataset, the
 following directories should be present::
 
     FSDnoisy18k.audio_test
