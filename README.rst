@@ -27,15 +27,23 @@ or::
     pip install -r requirements.txt
 
 Currently, this software works with the FSDnoisy18k dataset, which may
-be downloaded `here`__. Under the root directory of the dataset, the
-following directories should be present::
+be downloaded `here`__. For convenience, a bash script is provided to
+download the dataset automatically. The dependencies are bash, curl, and
+unzip. Simply run the following command from the root directory of the
+project::
+
+    scripts/download_dataset.sh
+
+This will download the dataset to a directory called ``_dataset``, which
+should then contain the following directories::
 
     FSDnoisy18k.audio_test
     FSDnoisy18k.audio_train
 
-When running the software, use the ``--dataset_path`` option (see later
-sections for details on how to specify options) to specify the path of
-the dataset directory.
+When running the software, use the ``--dataset_path`` option (refer to
+the next section for usage) to specify the path of the dataset
+directory. This is only necessary if the dataset path is different from
+the default: ``_dataset``.
 
 __ https://zenodo.org/record/2529934#.Xc71bNHLdrk
 
