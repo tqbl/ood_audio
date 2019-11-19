@@ -125,7 +125,7 @@ def train(dataset, args):
                        'lr',
                        'lr_decay',
                        'lr_decay_rate',
-                       'augmentation',
+                       'augment',
                        'relabel',
                        'relabel_threshold',
                        'relabel_weight',

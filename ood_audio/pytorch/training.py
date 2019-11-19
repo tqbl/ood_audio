@@ -70,7 +70,7 @@ def train(x_train, y_train, x_val, y_val, index_val,
 
     for epoch in range(params['n_epochs']):
         # Enable data augmentation after 10 epochs
-        if epoch == 10 and params['augmentation']:
+        if epoch == 10 and params['augment']:
             loader_train.dataset.transform = SpecAugment()
 
         # Train model using training set

@@ -81,7 +81,7 @@ Training
 
 To train a model, run::
 
-    python ood_audio/main.py train [--training_id ID] [--model MODEL] [--mask MASK] [--seed N] [--block_size N] [--batch_size N] [--n_epochs N] [--lr NUM] [--lr_decay NUM] [--lr_decay_rate N] [--relabel] [--relabel_threshold NUM] [--relabel_weight NUM] [--relabel_weight NUM] [--augmentation]
+    python ood_audio/main.py train [--training_id ID] [--model MODEL] [--mask MASK] [--seed N] [--block_size N] [--batch_size N] [--n_epochs N] [--lr NUM] [--lr_decay NUM] [--lr_decay_rate N] [--relabel] [--relabel_threshold NUM] [--relabel_weight NUM] [--relabel_weight NUM] [--augment]
 
 The ``--model`` option accepts the following values:
 
@@ -99,7 +99,7 @@ The path to the CSV file containing the pseudo-labels (generated using
 the *predict* sub-command described below) is specified using the
 ``--pseudolabel_path`` option.
 
-Other notable options are ``--augmentation``, which enables data
+Other notable options are ``--augment``, which enables data
 augmentation, and the ``--mask`` option, which allows training with a
 subset of the training set. For example, to train with the
 manually-verified subset of the training set only, run::
