@@ -15,6 +15,9 @@ manually verified (i.e. known be in-distribution). The auxiliary
 classifier is then used to detect and relabel the appropriate instances.
 
 
+.. contents::
+
+
 Requirements
 ------------
 
@@ -32,18 +35,18 @@ download the dataset automatically. The dependencies are bash, curl, and
 unzip. Simply run the following command from the root directory of the
 project::
 
-    scripts/download_dataset.sh
+    $ scripts/download_dataset.sh
 
-This will download the dataset to a directory called ``_dataset``, which
-should then contain the following directories::
+This will download the dataset to a directory called ``_dataset/``,
+which should then contain the following directories::
 
     FSDnoisy18k.audio_test
     FSDnoisy18k.audio_train
 
 When running the software, use the ``--dataset_path`` option (refer to
-the next section for usage) to specify the path of the dataset
-directory. This is only necessary if the dataset path is different from
-the default: ``_dataset``.
+the `Usage`_ section) to specify the path of the dataset directory. This
+is only necessary if the dataset path is different from the default:
+``_dataset/``.
 
 __ https://zenodo.org/record/2529934#.Xc71bNHLdrk
 
@@ -54,16 +57,21 @@ Quick Start
 If you want to run the experiments that were presented in the paper
 accompanying this code (to be uploaded soon), there are several bash
 scripts available that automate this. Assuming the FSDnoisy18k dataset
-has been downloaded in the default directory, run these commands::
+has been downloaded in ``_dataset/``, run these commands::
 
-    scripts/icassp/extract.sh
-    scripts/icassp/train.sh
-    scripts/icassp/evaluate.sh
+    $ scripts/icassp/extract.sh
+    $ scripts/icassp/train.sh
+    $ scripts/icassp/evaluate.sh
 
-The last command evaluates the systems and prints the results. Note that
-various files will be created in a directory called ``_workspace``,
-which itself is created in the current working directory. Ensure that
-enough hard disk space is available.
+The last command evaluates the systems and prints the results.
+
+Note that various files will be created in a directory called
+``_workspace``, which itself is created in the current working
+directory. Ensure that enough hard disk space is available. To change
+the path of the workspace directory, the easiest way is to modify
+``default.conf``. Alternatively, the configuration files in
+``scripts/icassp`` can also be modified. More details about configuring
+the software can be found in the next section.
 
 
 Usage
@@ -78,8 +86,8 @@ the ``--config_file`` (or ``-f``) command-line option, the path of the
 configuration file can be specified to the program. Options that are
 passed in the command-line override those in the config file. See the
 ``default.conf`` file for an example of a config file. It also includes
-descriptions of each option. Note that it is not intended to be
-modified, as it specifies the default values for each option.
+descriptions of each option. Note that this file is generally not
+intended to be modified, with the exception being the paths.
 
 In the following subsections, the various commands are described. Using
 this program, the user is able to extract feature vectors, train the
