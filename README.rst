@@ -4,14 +4,14 @@ Learning with OOD Audio
 This is the source code for an audio classification system that
 demonstrates learning with out-of-distribution (OOD) data, which is
 defined as data that does not belong to any of the target classes. More
-specifically, the training data is labelled, but some of the instances
-are OOD (hence incorrectly labelled) due to annotation errors.
+specifically, the training data is labeled, but some of the instances
+are OOD (hence incorrectly labeled) due to annotation errors.
 
 The system uses a pseudo-labeling method to relabel the instances that
 are believed to be OOD yet also similar enough to the target classes
 that pseudo-labeling is reasonable. This is achieved by first training
 an auxiliary classifier on a subset of the dataset that has been
-manually verified (i.e. known be in-distribution). The auxiliary
+manually verified (i.e. known to be in-distribution). The auxiliary
 classifier is then used to detect and relabel the appropriate instances.
 
 
