@@ -36,7 +36,7 @@ def parse_args():
     config_files = ['default.conf']
     if args.config_file:
         config_files.append(args.config_file)
-    config = configparser.SafeConfigParser()
+    config = configparser.ConfigParser()
     config.read(config_files)
 
     # Initialize the main parser and the sub-command parsers
