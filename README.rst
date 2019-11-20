@@ -90,7 +90,7 @@ Feature Extraction
 
 To extract feature vectors, run::
 
-    python ood_audio/main.py extract <training/test> [--recompute] [--sample_rate RATE] [--n_fft N] [--hop_length N] [--n_mels N]
+    python ood_audio/main.py extract <training/test> [--recompute BOOL] [--sample_rate RATE] [--n_fft N] [--hop_length N] [--n_mels N]
 
 This extracts log-mel feature vectors and stores them in a HDF5 file.
 
@@ -99,7 +99,7 @@ Training
 
 To train a model, run::
 
-    python ood_audio/main.py train [--training_id ID] [--model MODEL] [--mask MASK] [--seed N] [--block_size N] [--batch_size N] [--n_epochs N] [--lr NUM] [--lr_decay NUM] [--lr_decay_rate N] [--relabel] [--relabel_threshold NUM] [--relabel_weight NUM] [--relabel_weight NUM] [--augment]
+    python ood_audio/main.py train [--training_id ID] [--model MODEL] [--mask MASK] [--seed N] [--block_size N] [--batch_size N] [--n_epochs N] [--lr NUM] [--lr_decay NUM] [--lr_decay_rate N] [--relabel BOOL] [--relabel_threshold NUM] [--relabel_weight NUM] [--relabel_weight NUM] [--augment BOOL]
 
 The ``--model`` option accepts the following values:
 
@@ -129,7 +129,7 @@ Prediction
 
 To compute predictions, run::
 
-    python ood_audio/main.py predict <training/test> [--training_id ID] [--block_size N] [--epochs EPOCHS] [--odin]
+    python ood_audio/main.py predict <training/test> [--training_id ID] [--block_size N] [--epochs EPOCHS] [--odin BOOL]
 
 The ``--odin`` option enables the ODIN algorithm.
 
@@ -138,7 +138,7 @@ Evaluation
 
 To evaluate the predictions, run::
 
-    python task2/main.py evaluate [--training_id ID [ID ...]]
+    python ood_audio/main.py evaluate [--training_id ID [ID ...]]
 
 The ``--training_id`` option can be passed more than once, which allows
 evaluating the performance over multiple trials.
