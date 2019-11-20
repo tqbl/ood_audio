@@ -48,6 +48,24 @@ the default: ``_dataset``.
 __ https://zenodo.org/record/2529934#.Xc71bNHLdrk
 
 
+Quick Start
+-----------
+
+If you want to run the experiments that were presented in the paper
+accompanying this code (to be uploaded soon), there are several bash
+scripts available that automate this. Assuming the FSDnoisy18k dataset
+has been downloaded in the default directory, run these commands::
+
+    scripts/icassp/extract.sh
+    scripts/icassp/train.sh
+    scripts/icassp/evaluate.sh
+
+The last command evaluates the systems and prints the results. Note that
+various files will be created in a directory called ``_workspace``,
+which itself is created in the current working directory. Ensure that
+enough hard disk space is available.
+
+
 Usage
 -----
 
