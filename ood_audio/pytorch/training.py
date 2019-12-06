@@ -1,3 +1,4 @@
+import glob
 import os.path
 
 import numpy as np
@@ -57,6 +58,15 @@ def train(x_train, y_train, x_val, y_val, index_val,
         gamma=params['lr_decay'],
     )
 
+    # Load training state from last checkpoint if applicable
+    if not params['overwrite']:
+        initial_epoch = _load_checkpoint(model, optimizer,
+                                         scheduler, model_path)
+        if initial_epoch >= params['n_epochs']:
+            return
+    else:
+        initial_epoch = 0
+
     # Use helper classes to iterate over data in batches
     batch_size = params['batch_size']
     loader_train = ImageLoader(x_train, y_train, device, transform=None,
@@ -66,9 +76,9 @@ def train(x_train, y_train, x_val, y_val, index_val,
     # Instantiate Logger to record training/validation performance and
     # save checkpoint to disk after every epoch.
     model_path = os.path.join(model_path, 'model.{epoch:02d}.pth')
-    logger = Logger(log_path, model_path)
+    logger = Logger(log_path, model_path, params['overwrite'])
 
-    for epoch in range(params['n_epochs']):
+    for epoch in range(initial_epoch, params['n_epochs']):
         # Enable data augmentation after 10 epochs
         if epoch == 10 and params['augment']:
             loader_train.dataset.transform = SpecAugment()
@@ -81,11 +91,11 @@ def train(x_train, y_train, x_val, y_val, index_val,
         # Evaluate model using validation set
         _validate(loader_val, index_val, model.eval(), criterion, logger)
 
-        # Log results and save model to disk
-        logger.step(model, optimizer)
-
         # Invoke learning rate scheduler
         scheduler.step()
+
+        # Log results and save model to disk
+        logger.step(model, optimizer, scheduler)
 
     logger.close()
 
@@ -204,6 +214,35 @@ def _validate(loader, index, model, criterion, logger):
 
     ap = metrics.average_precision_score(y_true, y_pred, average='micro')
     logger.log('val_mAP', ap)
+
+
+def _load_checkpoint(model, optimizer, scheduler, model_path):
+    """Load the training state from the last checkpoint.
+
+    This function searches the directory specified by `model_path` for
+    checkpoints and selects the latest one.
+    """
+    # Check model directory for existing checkpoints
+    paths = glob.glob(os.path.join(model_path, 'model.*.pth'))
+    epoch = len(paths)
+    if epoch == 0:
+        return epoch
+
+    # Load training state from last checkpoint
+    checkpoint = torch.load(sorted(paths)[-1])
+    model.load_state_dict(checkpoint['model_state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
+    torch.set_rng_state(checkpoint['rng_state'])
+    torch.cuda.set_rng_state(checkpoint['cuda_rng_state'])
+
+    if epoch != checkpoint['epoch'] + 1:
+        # The epoch to resume from is determined by the number of saved
+        # checkpoint files. If this number doesn't agree with the number
+        # that is recorded internally, raise an error.
+        raise RuntimeError('Epoch mismath')
+
+    return epoch
 
 
 def _ensure_reproducibility(seed):

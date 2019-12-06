@@ -86,14 +86,20 @@ class Logger:
         model (torch.nn.Module): PyTorch model used for training.
         log_path (str): Path to directory in which to record logs.
         model_path (str): Path to directory in which to save models.
+        overwrite (bool): Whether to overwrite an existing log file.
     """
 
-    def __init__(self, log_path, model_path):
-        self.log_path = log_path
+    def __init__(self, log_path, model_path, overwrite=False):
+        self.log_path = os.path.join(log_path, 'history.csv')
         self.model_path = model_path
         self.results = OrderedDict()
-        self.results_df = pd.DataFrame()
         self.tb_writer = SummaryWriter(log_path)
+
+        # Read from existing log file if applicable
+        if overwrite or not os.path.isfile(self.log_path):
+            self.results_df = pd.DataFrame()
+        else:
+            self.results_df = pd.read_csv(self.log_path, index_col=0)
 
     def log(self, key, value):
         """Log a value for the specified key.
@@ -109,7 +115,7 @@ class Logger:
             self.results[key] = []
         self.results[key].append(value)
 
-    def step(self, model, optimizer):
+    def step(self, model, optimizer, scheduler):
         """Invoke the logger's 'save' operation.
 
         The values that have been logged (using :func:`log`) since the
@@ -122,17 +128,19 @@ class Logger:
             key1: value1, key2: value2, ...
 
         A training checkpoint is also saved to disk. This includes the
-        model weights, the state of the optimizer, and the states of the
-        PRNGs used by PyTorch.
+        model weights, the state of the optimizer, the state of the LR
+        scheduler, and the states of the PRNGs used by PyTorch.
 
         Args:
             model (torch.nn.Module): PyTorch model to be saved.
             optimizer (torch.optim.Optimizer): Training optimizer.
+            scheduler (torch.optim.lr_scheduler._LRScheduler):
+                Learning rate scheduler.
         """
         # Write results to CSV file
         results = OrderedDict((k, np.mean(v)) for k, v in self.results.items())
         self.results_df = self.results_df.append(results, ignore_index=True)
-        self.results_df.to_csv(os.path.join(self.log_path, 'history.csv'))
+        self.results_df.to_csv(self.log_path)
 
         # Write results to TensorBoard log file
         epoch = self.results_df.index[-1]
@@ -145,6 +153,7 @@ class Logger:
                       'creation_args': model.creation_args,
                       'model_state_dict': model.state_dict(),
                       'optimizer_state_dict': optimizer.state_dict(),
+                      'scheduler_state_dict': scheduler.state_dict(),
                       'rng_state': torch.get_rng_state(),
                       'cuda_rng_state': torch.cuda.get_rng_state(),
                       }
