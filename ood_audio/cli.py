@@ -34,9 +34,12 @@ def parse_args():
     # Parse the config file(s). The default config file is a fallback
     # for options that are not specified by the user.
     config = configparser.ConfigParser()
-    config.read_file(open('default.conf'))
-    if args.config_file:
-        config.read_file(open(args.config_file))
+    try:
+        config.read_file(open('default.conf'))
+        if args.config_file:
+            config.read_file(open(args.config_file))
+    except FileNotFoundError:
+        raise FileNotFoundError(f'Config file not found: {args.config_file}')
 
     # Initialize the main parser and the sub-command parsers
     parser = argparse.ArgumentParser(parents=[conf_parser])
