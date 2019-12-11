@@ -221,28 +221,32 @@ def _load_checkpoint(model, optimizer, scheduler, model_path):
 
     This function searches the directory specified by `model_path` for
     checkpoints and selects the latest one.
+
+    Returns:
+        int: The epoch to continue training from.
     """
     # Check model directory for existing checkpoints
-    paths = glob.glob(os.path.join(model_path, 'model.*.pth'))
-    epoch = len(paths)
-    if epoch == 0:
-        return epoch
+    paths = glob.glob(os.path.join(model_path, 'model.[0-9][0-9].pth'))
+    if len(paths) == 0:
+        return 0
 
     # Load training state from last checkpoint
-    checkpoint = torch.load(sorted(paths)[-1])
+    path = sorted(paths)[-1]
+    epoch = int(path[-6:-4])
+    checkpoint = torch.load(path)
     model.load_state_dict(checkpoint['model_state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
     torch.set_rng_state(checkpoint['rng_state'])
     torch.cuda.set_rng_state(checkpoint['cuda_rng_state'])
 
-    if epoch != checkpoint['epoch'] + 1:
-        # The epoch to resume from is determined by the number of saved
-        # checkpoint files. If this number doesn't agree with the number
+    if epoch != checkpoint['epoch']:
+        # The epoch to resume from is determined by the file name of the
+        # checkpoint file. If this number doesn't agree with the number
         # that is recorded internally, raise an error.
         raise RuntimeError('Epoch mismath')
 
-    return epoch
+    return epoch + 1
 
 
 def _ensure_reproducibility(seed):
