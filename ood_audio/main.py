@@ -2,6 +2,7 @@ import json
 import pickle
 import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 import numpy as np
@@ -165,10 +166,11 @@ def predict(dataset, args):
 
     # Compute predictions for each model and ensemble using mean
     log_path = os.path.join(args.log_path, args.training_id)
+    epochs = _determine_epochs(args.epochs, log_path)
     preds = [utils.timeit(lambda: training.predict(x, df, epoch, model_path,
                                                    odin=args.odin),
                           f'[Epoch {epoch}] Computed predictions')
-             for epoch in _determine_epochs(args.epochs, log_path)]
+             for epoch in epochs]
 
     pred_mean = pd.concat(preds).groupby(level=0).mean()
 
@@ -183,6 +185,13 @@ def predict(dataset, args):
 
     # Write predictions to disk
     pred_mean.to_csv(os.path.join(prediction_path, f'{dataset.name}.csv'))
+
+    # Remove model files that were not used for prediction
+    if args.clean:
+        for path in Path(model_path).glob('model.[0-9][0-9].pth'):
+            if int(str(path)[-6:-4]) not in epochs:
+                path.unlink()
+        print('Removed unused model files')
 
 
 def evaluate_all(dataset, args, verbose=True):

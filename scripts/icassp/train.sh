@@ -12,7 +12,7 @@ trial() {
   python ood_audio/main.py -f "$1" train --model $2 --seed $3 --training_id "$id"
 
   echo -e "\nPredicting for '$id'..."
-  python ood_audio/main.py -f "$1" predict test --training_id "$id"
+  python ood_audio/main.py -f "$1" predict test --training_id "$id" --clean=True
 }
 
 experiment() {

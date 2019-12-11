@@ -113,6 +113,7 @@ def parse_args():
     parser_predict.add_argument('--block_size', type=int, metavar='N')
     parser_predict.add_argument('--epochs', type=_epochs, metavar='EPOCHS')
     parser_predict.add_argument('--odin', type=_bool, metavar='BOOL')
+    parser_predict.add_argument('--clean', type=_bool, metavar='BOOL')
 
     # Specify the command-line arguments of the 'evaluate' sub-command
     parser_evaluate.add_argument('--training_id', metavar='ID', nargs='+')
