@@ -368,5 +368,4 @@ if __name__ == '__main__':
     try:
         sys.exit(main(cli.parse_args()))
     except FileNotFoundError as error:
-        print(error, file=sys.stderr)
-        sys.exit(1)
+        sys.exit(error)
