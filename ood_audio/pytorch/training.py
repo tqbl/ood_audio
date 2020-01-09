@@ -143,7 +143,7 @@ def predict(x, df, epoch, model_path, batch_size=128, odin=False):
     return inference.merge_predictions(y_pred.cpu().numpy(), df.index)
 
 
-def _odin(model, loader, temperature=2.0, epsilon=8e-5):
+def _odin(model, loader, temperature=1.5, epsilon=5e-4):
     """Compute predictions using the ODIN algorithm [1]_.
 
     Args:
