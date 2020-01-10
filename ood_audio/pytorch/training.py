@@ -157,24 +157,21 @@ def _odin(model, loader, temperature=1.5, epsilon=5e-4):
                reliability ability of out-of-distribution image
                detection in neural networks,” in ICLR, 2018.
     """
-    criterion = utils.cross_entropy
-
     y_preds = []
     for batch_x, in loader:
-        batch_x = Variable(batch_x, requires_grad=True)
-        batch_y = model(batch_x)
+        batch_y = model(batch_x.requires_grad_())
 
-        labels = Variable(batch_y.softmax(dim=1))
-        loss = criterion(batch_y / temperature, labels)
+        # Compute loss between prediction and target. The target in this
+        # case is just the prediction without temperature scaling.
+        target = batch_y.softmax(dim=1)
+        loss = utils.cross_entropy(batch_y / temperature, target)
         loss.backward()
 
-        gradient = 2 * torch.ge(batch_x.grad.data, other=0).float() - 1
-
         # Perturb inputs in the opposite direction of the gradient
-        batch_x = torch.add(batch_x.data, epsilon, -gradient)
+        batch_x = batch_x - epsilon * batch_x.grad.sign()
         # Compute predictions for perturbed inputs
         with torch.no_grad():
-            batch_y = model(Variable(batch_x))
+            batch_y = model(batch_x)
 
         y_preds.append((batch_y / temperature).softmax(dim=1).data)
 
