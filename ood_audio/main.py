@@ -197,10 +197,12 @@ def predict(dataset, args):
 
     # Remove model files that were not used for prediction
     if args.clean:
+        count = 0
         for path in Path(model_path).glob('model.[0-9][0-9].pth'):
             if int(str(path)[-6:-4]) not in epochs:
                 path.unlink()
-        print('Removed unused model files')
+                count += 1
+        print(f'Removed {count} unused model files')
 
 
 def evaluate_all(dataset, args, verbose=True):
