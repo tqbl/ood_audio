@@ -6,7 +6,6 @@ import sklearn.metrics as metrics
 from tqdm import tqdm
 
 import torch
-from torch.autograd import Variable
 from torch.optim import Adam
 from torch.optim.lr_scheduler import StepLR
 
@@ -100,7 +99,7 @@ def train(x_train, y_train, x_val, y_val, index_val,
     logger.close()
 
 
-def predict(x, df, epoch, model_path, batch_size=128, odin=False):
+def predict(x, df, epoch, model_path, batch_size=128, callback=None):
     """Compute predictions using a saved model.
 
     The model that was saved after the specified epoch is used to
@@ -113,7 +112,7 @@ def predict(x, df, epoch, model_path, batch_size=128, odin=False):
         epoch (int): Epoch number of the model to load.
         model_path (str): Path to directory containing saved models.
         batch_size (int): Number of instances to predict per batch.
-        odin (bool): Whether to use the ODIN algorithm.
+        callback: Optional callback used for inference.
 
     Returns:
         np.ndarray: The clip-level predictions.
@@ -134,48 +133,13 @@ def predict(x, df, epoch, model_path, batch_size=128, odin=False):
         x = x.repeat(n_channels, axis=-1)
 
     loader = ImageLoader(x, device=device, batch_size=batch_size)
-    if odin:
-        y_pred = _odin(model, loader)
+    if callback:
+        y_pred = callback(model, loader)
     else:
         with torch.no_grad():
             y_pred = torch.cat([model(batch_x).softmax(dim=1).data
                                 for batch_x, in loader])
     return inference.merge_predictions(y_pred.cpu().numpy(), df.index)
-
-
-def _odin(model, loader, temperature=1.5, epsilon=5e-4):
-    """Compute predictions using the ODIN algorithm [1]_.
-
-    Args:
-        model (torch.nn.Module): Model used to compute predictions.
-        loader (torch.utils.data.DataLoader): Dataset to predict.
-        temperature (number): Parameter used to scale the logits.
-        epsilon (number): Amount of noise to add to the inputs.
-
-    References:
-        .. [1] S. Liang, Y. Li, and R. Srikant, “Enhancing the
-               reliability ability of out-of-distribution image
-               detection in neural networks,” in ICLR, 2018.
-    """
-    y_preds = []
-    for batch_x, in loader:
-        batch_y = model(batch_x.requires_grad_())
-
-        # Compute loss between prediction and target. The target in this
-        # case is just the prediction without temperature scaling.
-        target = batch_y.softmax(dim=1)
-        loss = utils.cross_entropy(batch_y / temperature, target)
-        loss.backward()
-
-        # Perturb inputs in the opposite direction of the gradient
-        batch_x = batch_x - epsilon * batch_x.grad.sign()
-        # Compute predictions for perturbed inputs
-        with torch.no_grad():
-            batch_y = model(batch_x)
-
-        y_preds.append((batch_y / temperature).softmax(dim=1).data)
-
-    return torch.cat(y_preds)
 
 
 def _train(data, model, criterion, optimizer, logger):

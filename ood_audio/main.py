@@ -104,9 +104,10 @@ def train(dataset, args):
 
     # Relabel examples if relabeling is enabled
     if args.relabel:
-        y_pred = pd.read_csv(args.pseudolabel_path, index_col=0)
         mask = df_train.manually_verified == 0
-        y_train[mask] = relabel.relabel(y_train[mask], y_pred,
+        y_pred = pd.read_csv(args.pseudolabel_path, index_col=0)
+        y_conf = pd.read_csv(args.confidence_path, index_col=0).max(axis=1)
+        y_train[mask] = relabel.relabel(y_train[mask], y_pred, y_conf,
                                         args.relabel_threshold,
                                         args.relabel_weight)
 
@@ -155,6 +156,7 @@ def predict(dataset, args):
         dataset (Dataset): Information about the dataset.
         args: Named tuple of configuration arguments.
     """
+    import pytorch.odin as odin
     import pytorch.training as training
     import utils
 
@@ -164,11 +166,18 @@ def predict(dataset, args):
     mean, std = pickle.load(open(os.path.join(model_path, 'scaler.p'), 'rb'))
     x = utils.standardize(x, mean, std)
 
+    # Use ODIN algorithm if enabled
+    output_name = dataset.name
+    predict_cb = None
+    if args.odin:
+        output_name += '_odin'
+        predict_cb = odin.predict
+
     # Compute predictions for each model and ensemble using mean
     log_path = os.path.join(args.log_path, args.training_id)
     epochs = _determine_epochs(args.epochs, log_path)
     preds = [utils.timeit(lambda: training.predict(x, df, epoch, model_path,
-                                                   odin=args.odin),
+                                                   callback=predict_cb),
                           f'[Epoch {epoch}] Computed predictions')
              for epoch in epochs]
 
@@ -184,7 +193,7 @@ def predict(dataset, args):
                     )
 
     # Write predictions to disk
-    pred_mean.to_csv(os.path.join(prediction_path, f'{dataset.name}.csv'))
+    pred_mean.to_csv(os.path.join(prediction_path, f'{output_name}.csv'))
 
     # Remove model files that were not used for prediction
     if args.clean:
