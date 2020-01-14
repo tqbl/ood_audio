@@ -67,10 +67,10 @@ The last command evaluates the systems and prints the results.
 
 Note that various files will be created in a directory called
 ``_workspace``, which itself is created in the current working
-directory. Ensure that enough hard disk space is available. To change
-the path of the workspace directory, the easiest way is to modify
-``default.conf``. Alternatively, the configuration files in
-``scripts/icassp`` can also be modified. More details about configuring
+directory. Ensure that enough hard disk space is available (at least 20
+GiB). To change the path of the workspace directory, the easiest way is
+to modify ``default.conf``. Alternatively, the configuration files in
+``scripts/icassp/`` can also be modified. More details about configuring
 the software can be found in the next section.
 
 
