@@ -104,6 +104,9 @@ def train(dataset, args):
 
     # Relabel examples if relabeling is enabled
     if args.relabel:
+        if not args.confidence_path:
+            args.confidence_path = args.pseudolabel_path
+
         mask = df_train.manually_verified == 0
         y_pred = pd.read_csv(args.pseudolabel_path, index_col=0)
         y_conf = pd.read_csv(args.confidence_path, index_col=0).max(axis=1)
