@@ -31,6 +31,7 @@ run1() {
 
 run2() {
   experiment 'scripts/icassp/relabel.conf' $1
+  experiment 'scripts/icassp/relabel-odin.conf' $1
 }
 
 run1 'vgg'
@@ -39,7 +40,13 @@ run1 'densenet'
 echo 'Computing pseudo-labels...'
 python ood_audio/main.py \
   -f 'scripts/icassp/clean-da.conf' --prediction_path 'metadata/_pseudo' \
-  predict training --training_id 'densenet_clean-da/seed=1000'
+  predict training --training_id 'densenet_clean-da/seed=1000' --clean=True
+echo
+
+echo 'Computing pseudo-labels (ODIN)...'
+python ood_audio/main.py \
+  -f 'scripts/icassp/clean-da.conf' --prediction_path 'metadata/_pseudo' \
+  predict training --training_id 'densenet_clean-da/seed=1000' --clean=True --odin=True
 echo
 
 run2 'vgg'

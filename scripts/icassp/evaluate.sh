@@ -11,12 +11,13 @@ evaluate() {
   echo
 }
 
-evaluate 'vgg_default'
-evaluate 'vgg_clean'
-evaluate 'vgg_clean-da'
-evaluate 'vgg_relabel'
+evaluate_systems() {
+  evaluate "$1_default"
+  evaluate "$1_clean"
+  evaluate "$1_clean-da"
+  evaluate "$1_relabel"
+  evaluate "$1_relabel-odin"
+}
 
-evaluate 'densenet_default'
-evaluate 'densenet_clean'
-evaluate 'densenet_clean-da'
-evaluate 'densenet_relabel'
+evaluate_systems vgg
+evaluate_systems densenet
