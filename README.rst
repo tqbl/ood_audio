@@ -14,6 +14,10 @@ an auxiliary classifier on a subset of the dataset that has been
 manually verified (i.e. known to be in-distribution). The auxiliary
 classifier is then used to detect and relabel the appropriate instances.
 
+For more details about the method, consider reading the `paper`__ [1]_.
+
+__ https://arxiv.org/abs/2002.04683
+
 
 .. contents::
 
@@ -150,3 +154,12 @@ To evaluate the predictions, run::
 
 The ``--training_id`` option can be passed more than once, which allows
 evaluating the performance over multiple trials.
+
+
+Citing
+------
+If you wish to cite this work, please cite the following paper:
+
+.. [1] \T. Iqbal, Y. Cao, Q. Kong, M. D. Plumbley, and W. Wang, "Learning
+       with Out-of-Distribution Data for Audio Classification", arXiv
+       preprint arXiv:2002.04683, 2020
