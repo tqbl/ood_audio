@@ -59,9 +59,9 @@ Quick Start
 -----------
 
 If you want to run the experiments that were presented in the paper
-accompanying this code (to be uploaded soon), there are several bash
-scripts available that automate this. Assuming the FSDnoisy18k dataset
-has been downloaded in ``_dataset/``, run these commands::
+accompanying this code [1]_, there are several bash scripts available that
+automate this. Assuming the FSDnoisy18k dataset has been downloaded in
+``_dataset/``, run::
 
     $ scripts/icassp/extract.sh
     $ scripts/icassp/train.sh
