@@ -30,7 +30,7 @@ numpy==1.17.3
 oauthlib==3.1.0
 packaging==19.2
 pandas==0.25.3
-Pillow==6.2.1
+Pillow==9.3.0
 protobuf==3.10.0
 pyasn1==0.4.7
 pyasn1-modules==0.2.7
